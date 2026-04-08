@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find out which poo you truly are | The Swirl Ritual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #000; color: #fff; }
+        .font-brand { font-family: 'Fredoka One', cursive; }
+        .mystery-glow { box-shadow: 0 0 80px rgba(236, 72, 153, 0.4); }
+        .animate-pulse-slow { animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .option-card { transition: all 0.2s ease; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .option-card:active { transform: scale(0.95); background: rgba(236, 72, 153, 0.2); }
+        .code-box { background: linear-gradient(45deg, #ec4899, #8b5cf6); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-950 via-slate-950 to-black">
+
+    <main id="quiz-container" class="max-w-md w-full text-center relative">
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="space-y-8">
+            <div class="relative inline-block">
+                <div class="absolute inset-0 bg-pink-600/30 blur-3xl animate-pulse-slow"></div>
+                <img src="https://sc02.alicdn.com/kf/A606c31b759f94b67bc7cfec6a384323ci.png" class="w-64 h-64 rounded-full mx-auto relative z-10 border border-white/10 shadow-2xl">
+            </div>
+            <h1 class="text-4xl font-brand tracking-tighter leading-none uppercase">Which "Clingy Poo" Are You?</h1>
+            <p class="text-slate-400 text-sm tracking-widest uppercase font-bold">10 Simple Questions. 1 Final Form.</p>
+            <button onclick="startQuiz()" class="w-full bg-white text-black font-brand text-2xl py-6 rounded-2xl shadow-white/10 shadow-2xl hover:bg-pink-500 hover:text-white transition-all">
+                START THE RITUAL
+            </button>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="question-screen" class="hidden space-y-8">
+            <div id="progress-bar" class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                <div id="progress-fill" class="h-full bg-pink-500 transition-all duration-500" style="width: 10%"></div>
+            </div>
+            <h2 id="question-text" class="text-2xl font-bold leading-tight min-h-[6rem]">Thinking...</h2>
+            <div id="options" class="space-y-3"></div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden space-y-8 py-4">
+            <div class="space-y-2">
+                <span class="text-pink-500 font-bold tracking-[0.3em] text-xs uppercase">Identity Found</span>
+                <h2 id="result-name" class="text-4xl font-brand">THE MYSTERY</h2>
+            </div>
+
+            <!-- Identity Code UI -->
+            <div class="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4">
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Copy your Identity Code:</p>
+                <div id="code-display" class="code-box text-5xl font-brand py-4 rounded-2xl tracking-widest">#00</div>
+                <button onclick="copyCode()" class="text-pink-400 text-sm font-bold flex items-center justify-center w-full gap-2">
+                    <span id="copy-text">CLICK TO COPY CODE</span>
+                </button>
+            </div>
+
+            <div class="relative">
+                <div class="absolute inset-0 bg-white/5 blur-3xl rounded-full"></div>
+                <img src="https://sc02.alicdn.com/kf/A3facb2ee35424fce8decfb8d820f8da5M.png" class="w-full max-w-[200px] mx-auto rounded-3xl relative z-10 border border-white/10 shadow-2xl mystery-glow">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span class="text-7xl font-brand text-white/10 animate-pulse">?</span>
+                </div>
+            </div>
+
+            <p id="result-desc" class="text-slate-400 italic text-sm leading-relaxed px-4"></p>
+
+            <div class="space-y-4 pt-4">
+                <p class="text-xs text-red-400 font-bold animate-pulse">⚠️ PASTE YOUR CODE IN ETSY ORDER NOTE!</p>
+                <a id="etsy-link" href="#" class="block w-full bg-pink-600 hover:bg-pink-700 text-white font-brand text-2xl py-6 rounded-2xl shadow-pink-500/20 shadow-2xl transition-all">
+                    CLAIM YOUR DESTINY
+                </a>
+                <p class="text-[9px] text-slate-600 font-bold tracking-widest uppercase">The Swirl is fickle. No refunds.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const quiz = [
+            {q:\"Best finger for picking your nose?\", o:[{t:\"Pinky\",r:\"02\"},{t:\"Thumb\",r:\"07\"},{t:\"Index\",r:\"04\"},{t:\"A Pencil\",r:\"06\"}]},
+            {q:\"You find a huge pimple on your nose. Now what?\", o:[{t:\"Pop it now!\",r:\"05\"},{t:\"Watch in mirror\",r:\"06\"},{t:\"Record a video\",r:\"04\"},{t:\"Scream\",r:\"02\"}]},
+            {q:\"A silent fart in a crowded elevator...\", o:[{t:\"Hold breath\",r:\"01\"},{t:\"Look disgusted\",r:\"04\"},{t:\"Scream\",r:\"05\"},{t:\"Enjoy the chaos\",r:\"06\"}]},
+            {q:\"You find weird gunk between your toes.\", o:[{t:\"Flick it away\",r:\"07\"},{t:\"Study it\",r:\"03\"},{t:\"Sniff it\",r:\"08\"},{t:\"Call 911\",r:\"01\"}]},
+            {q:\"Peeing in the shower?\", o:[{t:\"Precision aim\",r:\"03\"},{t:\"Let it flow\",r:\"08\"},{t:\"Never!\",r:\"01\"},{t:\"I aim for the soap\",r:\"05\"}]},
+            {q:\"Sniffing a 3-day-old dirty sock?\", o:[{t:\"Big inhale\",r:\"08\"},{t:\"Quick check\",r:\"07\"},{t:\"Gag\",r:\"02\"},{t:\"Vintage scent\",r:\"06\"}]},
+            {q:\"Your zipper is open in public!\", o:[{t:\"Die of shame\",r:\"02\"},{t:\"Just wink\",r:\"03\"},{t:\"Zip it slowly\",r:\"08\"},{t:\"Fashion choice\",r:\"05\"}]},
+            {q:\"Broccoli stuck in your teeth at a party.\", o:[{t:\"Use a fingernail\",r:\"07\"},{t:\"Keep smiling\",r:\"08\"},{t:\"Tell everyone\",r:\"03\"},{t:\"Go home\",r:\"01\"}]},
+            {q:\"Pizza drops on the floor. 5-second rule?\", o:[{t:\"3 seconds max\",r:\"01\"},{t:\"It's seasoning\",r:\"03\"},{t:\"Food is food\",r:\"07\"},{t:\"Cry\",r:\"04\"}]},
+            {q:\"Kissing someone with bad morning breath?\", o:[{t:\"It's poison\",r:\"05\"},{t:\"Use a mask\",r:\"02\"},{t:\"French kiss\",r:\"03\"},{t:\"I don't care\",r:\"08\"}]}
+        ];
+        const results = {
+            \"01\":{n:\"THE RAGING CHEF\",d:\"A ball of chaotic heat. You value order but live in a swirl of stress. This is your reflection.\"},
+            \"02\":{n:\"THE POUTY PIXIE\",d:\"A sensitive soul in a dirty world. You are the innocent victim of the swirl.\"},
+            \"03\":{n:\"THE MARILYN STARLET\",d:\"Dramatic, iconic, and undeniably stinky. You are Hollywood magic in a spiral.\"},
+            \"04\":{n:\"THE JUDGMENTAL DIVA\",d:\"Your eye-roll is lethal. You have zero tolerance for peasants. You are elite filth.\"},
+            \"05\":{n:\"THE GOOFY REBEL\",d:\"Chaos is your language. You live for the 'Why?' stares. You are pure, unhinged joy.\"},
+            \"06\":{n:\"THE SKETCHY SHADOW\",d:\"You see the things others miss. Analytical, observant, and slightly creepy.\"},
+            \"07\":{n:\"THE EMPTY-HEADED BANDIT\",d:\"No thoughts, head empty, vibes only. You are free from the burden of caring.\"},
+            \"08\":{n:\"THE ZEN GREMLIN\",d:\"Unbothered. Moisturized. In your lane. You've reached nirvana through stinky existence.\"}
+        };
+        let step = 0, scores = {};
+        function startQuiz() { document.getElementById('start-screen').classList.add('hidden'); document.getElementById('question-screen').classList.remove('hidden'); show(); }
+        function show() {
+            const q = quiz[step];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('progress-fill').style.width = `${(step+1)*10}%`;
+            const div = document.getElementById('options'); div.innerHTML = '';
+            q.o.forEach(o => {
+                const b = document.createElement('button');
+                b.className = \"option-card w-full text-left p-6 rounded-2xl font-bold text-slate-300\";
+                b.innerText = o.t; b.onclick = () => { scores[o.r]=(scores[o.r]||0)+1; step++; if(step<10)show(); else result(); };
+                div.appendChild(b);
+            });
+        }
+        function result() {
+            document.getElementById('question-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            let w = Object.keys(scores).reduce((a,b)=>scores[a]>scores[b]?a:b);
+            document.getElementById('result-name').innerText = results[w].n;
+            document.getElementById('result-desc').innerText = results[w].d;
+            document.getElementById('code-display').innerText = `#${w}`;
+            document.getElementById('etsy-link').href = `https://www.etsy.com/listing/4483373220?vibe=${w}`;
+        }
+        function copyCode() {
+            const code = document.getElementById('code-display').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                document.getElementById('copy-text').innerText = \"COPIED! NOW PASTE IN ETSY NOTE\";
+                setTimeout(() => { document.getElementById('copy-text').innerText = \"CLICK TO COPY CODE\"; }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>
